@@ -66,3 +66,28 @@ print(f"Accuracy score = {accuracy:.2f}%")
 print(f"Precision score = {precision:.2f}%")
 print(f"Recall score = {recall:.2f}")
 print(f"F1 score = {f1:.2f}%")
+
+# GridSearch
+XG_model = XGBClassifier(**best_params_XG,random_state=42)
+XG_model.fit(X_train, y_train)
+
+# Predict on the test set
+y_pred = XG_model.predict(X_test)
+
+# Evaluate the model
+cv = RepeatedStratifiedKFold(n_splits=4, n_repeats=3, random_state=42)
+n_scores = cross_val_score(XG_model, X_train, y_train, scoring='accuracy', cv=cv, n_jobs=-1)
+print("Cross-validated training scores:", n_scores)
+print("Mean CV_train score: %.4f" % n_scores.mean())
+print("Test score: %.4f" % XG_model.score(X_test, y_test))
+
+# Calculate and print evaluation metrics
+accuracy = accuracy_score(y_test, y_pred) * 100
+precision = precision_score(y_test, y_pred, average='weighted') * 100
+recall = recall_score(y_test, y_pred, average='weighted') * 100
+f1 = f1_score(y_test, y_pred, average='weighted') * 100
+
+print(f"Accuracy score = {accuracy:.2f}%")
+print(f"Precision score = {precision:.2f}%")
+print(f"Recall score = {recall:.2f}%")
+print(f"F1 score = {f1:.2f}%")
