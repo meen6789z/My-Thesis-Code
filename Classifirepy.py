@@ -25,4 +25,12 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, Gradien
 from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
+data=pd.read_excel("C:\Users\Asus\OneDrive\เดสก์ท็อป\Main folder\My_Project\Kmeans_Data_Povertygap.xlsx")
+X = data[[ 'x2', 'x3','x5', 'x6', 'x7',  'x10','x12','x13']]
+y = data[['y']]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+smote = SMOTE(sampling_strategy='auto', random_state=42)
+X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
 
+X_train=X_resampled
+y_train=y_resampled
