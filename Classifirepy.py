@@ -43,7 +43,7 @@ best_params_RF = {'max_depth': 5,'min_samples_leaf': 4,'min_samples_split': 10,
                             'n_estimators': 300,'max_features': 'sqrt','bootstrap': False,}
 best_params_ada= {'n_estimators':100,'learning_rate':0.05}
 best_params_XG= {'colsample_bytree': 1, 'learning_rate': 0.01, 'max_depth': 3, 'min_samples_leaf': 1, 'n_estimators': 50, 'subsample': 0.7,'min_samples_split':2}
-best_params_RF= {'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 15, 'n_estimators': 100}
+best_gradient_boost_model= {'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 15, 'n_estimators': 100}
 
 #Buiild Model Random Forest
 RF_model = RandomForestClassifier(**best_params_RF,random_state=42)
@@ -67,8 +67,9 @@ print(f"Precision score = {precision:.2f}%")
 print(f"Recall score = {recall:.2f}")
 print(f"F1 score = {f1:.2f}%")
 
+#Classification Report
 print(classification_report(y_test, y_pred))
-
+#Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
 
@@ -98,7 +99,78 @@ print(f"Precision score = {precision:.2f}%")
 print(f"Recall score = {recall:.2f}%")
 print(f"F1 score = {f1:.2f}%")
 
+#Classification Report
 print(classification_report(y_test, y_pred))
+#Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
 
+
+# gridsearch
+ada_boost_model = AdaBoostClassifier(**best_params_ada,random_state=42)
+# Fit AdaBoostClassifier on resampled data
+ada_boost_model.fit(X_train, y_train)
+
+# Predict on the test set
+y_pred_ada = ada_boost_model.predict(X_test)
+
+# Evaluate the model
+cv_ada = RepeatedStratifiedKFold(n_splits=4, n_repeats=3, random_state=42)
+n_scores_ada = cross_val_score(ada_boost_model, X_train, y_train, scoring='accuracy', cv=cv_ada, n_jobs=-1)
+print("Cross-validated training scores (AdaBoost):", n_scores_ada)
+print("Mean CV_train score (AdaBoost): %.4f" % n_scores_ada.mean())
+print("Test score (AdaBoost): %.4f" % ada_boost_model.score(X_test, y_test))
+
+# Calculate and print evaluation metrics (AdaBoost)
+accuracy_ada = accuracy_score(y_test, y_pred_ada) * 100
+precision_ada = precision_score(y_test, y_pred_ada, average='weighted') * 100
+recall_ada = recall_score(y_test, y_pred_ada, average='weighted') * 100
+f1_ada = f1_score(y_test, y_pred_ada, average='weighted') * 100
+
+print("Evaluation metrics for AdaBoost:")
+print(f"Accuracy score = {accuracy_ada:.2f}%")
+print(f"Precision score = {precision_ada:.2f}%")
+print(f"Recall score = {recall_ada:.2f}%")
+print(f"F1 score = {f1_ada:.2f}%")
+
+
+#Classification Report
+print(classification_report(y_test, y_pred))
+#Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
+
+
+# GridSearch
+gradient_boost_model = GradientBoostingClassifier(**best_gradient_boost_model,random_state=42)
+
+# Fit GradientBoostingClassifier on resampled data
+gradient_boost_model.fit(X_train, y_train)
+
+# Predict on the test set
+y_pred_gb = gradient_boost_model.predict(X_test)
+
+# Evaluate the model
+cv_gb = RepeatedStratifiedKFold(n_splits=4, n_repeats=3, random_state=42)
+n_scores_gb = cross_val_score(gradient_boost_model, X_train, y_train, scoring='accuracy', cv=cv_gb, n_jobs=-1)
+print("\nCross-validated training scores (Gradient Boosting):", n_scores_gb)
+print("Mean CV_train score (Gradient Boosting): %.4f" % n_scores_gb.mean())
+print("Test score (Gradient Boosting): %.4f" % gradient_boost_model.score(X_test, y_test))
+
+# Calculate and print evaluation metrics (Gradient Boosting)
+accuracy_gb = accuracy_score(y_test, y_pred_gb) * 100
+precision_gb = precision_score(y_test, y_pred_gb, average='weighted') * 100
+recall_gb = recall_score(y_test, y_pred_gb, average='weighted') * 100
+f1_gb = f1_score(y_test, y_pred_gb, average='weighted') * 100
+
+print("\nEvaluation metrics for Gradient Boosting:")
+print(f"Accuracy score = {accuracy_gb:.2f}%")
+print(f"Precision score = {precision_gb:.2f}%")
+print(f"Recall score = {recall_gb:.2f}%")
+print(f"F1 score = {f1_gb:.2f}%")
+
+#Classification Report
+print(classification_report(y_test, y_pred))
+#Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
