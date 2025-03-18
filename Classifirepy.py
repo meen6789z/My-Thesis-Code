@@ -174,3 +174,112 @@ print(classification_report(y_test, y_pred))
 #Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
+
+
+# Feature Important
+## Random Forest
+feature_importance = RF_model.feature_importances_
+feature_importance_percent = feature_importance * 100
+
+
+feature_names = X.columns
+feature_importance_dict = dict(zip(feature_names, feature_importance_percent))
+
+
+sorted_feature_importance = sorted(feature_importance_dict.items(), key=lambda x: x[1], reverse=False)
+sorted_feature_names, sorted_feature_importance = zip(*sorted_feature_importance)
+
+
+plt.figure(figsize=(17, 6))
+bars = plt.barh(sorted_feature_names, sorted_feature_importance, color='skyblue')
+
+for bar, value in zip(bars, sorted_feature_importance):
+    plt.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
+             f'{value:.2f}%', va='center')
+
+plt.xticks(rotation=90)
+plt.xlabel('Feature Score (%)')
+plt.ylabel('Feature')
+plt.title('Feature Importance for Random Forest Model')
+plt.show()
+
+
+## XGBoost
+feature_importance = XG_model.feature_importances_
+feature_importance_percent = feature_importance * 100
+
+
+feature_names = X.columns
+feature_importance_dict = dict(zip(feature_names, feature_importance_percent))
+
+
+sorted_feature_importance = sorted(feature_importance_dict.items(), key=lambda x: x[1], reverse=False)
+sorted_feature_names, sorted_feature_importance = zip(*sorted_feature_importance)
+
+
+plt.figure(figsize=(17, 6))
+bars = plt.barh(sorted_feature_names, sorted_feature_importance, color='skyblue')
+
+for bar, value in zip(bars, sorted_feature_importance):
+    plt.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
+             f'{value:.2f}%', va='center')
+
+plt.xticks(rotation=90)
+plt.xlabel('Feature Score (%)')
+plt.ylabel('Feature')
+plt.title('Feature Importance for XG Boost Model')
+plt.show()
+
+
+## Gradient Boost
+feature_importance = gradient_boost_model.feature_importances_
+feature_importance_percent = feature_importance * 100
+
+
+feature_names = X.columns
+feature_importance_dict = dict(zip(feature_names, feature_importance_percent))
+
+
+sorted_feature_importance = sorted(feature_importance_dict.items(), key=lambda x: x[1], reverse=False)
+sorted_feature_names, sorted_feature_importance = zip(*sorted_feature_importance)
+
+
+plt.figure(figsize=(17, 6))
+bars = plt.barh(sorted_feature_names, sorted_feature_importance, color='skyblue')
+
+for bar, value in zip(bars, sorted_feature_importance):
+    plt.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
+             f'{value:.2f}%', va='center')
+
+plt.xticks(rotation=90)
+plt.xlabel('Feature Score (%)')
+plt.ylabel('Feature')
+plt.title('Feature Importance for Gradient Boost Model')
+plt.show()
+
+
+## AdaBoost
+feature_importance = ada_boost_model.feature_importances_
+feature_importance_percent = feature_importance * 100
+
+
+feature_names = X.columns
+feature_importance_dict = dict(zip(feature_names, feature_importance_percent))
+
+
+sorted_feature_importance = sorted(feature_importance_dict.items(), key=lambda x: x[1], reverse=False)
+sorted_feature_names, sorted_feature_importance = zip(*sorted_feature_importance)
+
+
+plt.figure(figsize=(17, 6))
+bars = plt.barh(sorted_feature_names, sorted_feature_importance, color='skyblue')
+
+for bar, value in zip(bars, sorted_feature_importance):
+    plt.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
+             f'{value:.2f}%', va='center')
+
+plt.xticks(rotation=90)
+plt.xlabel('Feature Score (%)')
+plt.ylabel('Feature')
+plt.title('Feature Importance for Adaptive Boost Model')
+plt.show()
