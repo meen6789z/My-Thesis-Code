@@ -45,3 +45,24 @@ best_params_ada= {'n_estimators':100,'learning_rate':0.05}
 best_params_XG= {'colsample_bytree': 1, 'learning_rate': 0.01, 'max_depth': 3, 'min_samples_leaf': 1, 'n_estimators': 50, 'subsample': 0.7,'min_samples_split':2}
 best_params_RF= {'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 15, 'n_estimators': 100}
 
+#Buiild Model Random Forest
+RF_model = RandomForestClassifier(**best_params_RF,random_state=42)
+RF_model.fit(X_train, y_train)
+
+y_pred = RF_model.predict(X_test)
+
+cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=42)
+n_scores = cross_val_score(RF_model, X_train, y_train, scoring='accuracy', cv=cv, n_jobs=-1)
+print("Cross-validated training scores:", n_scores)
+print("Mean CV_train score:", n_scores.mean())
+print("Test score:", RF_model.score(X_test, y_test))
+
+accuracy = accuracy_score(y_test, y_pred) * 100
+precision = precision_score(y_test, y_pred, average='weighted') * 100
+recall = recall_score(y_test, y_pred, average='weighted')*100
+f1 = f1_score(y_test, y_pred, average='weighted') * 100
+
+print(f"Accuracy score = {accuracy:.2f}%")
+print(f"Precision score = {precision:.2f}%")
+print(f"Recall score = {recall:.2f}")
+print(f"F1 score = {f1:.2f}%")
