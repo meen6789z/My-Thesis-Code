@@ -43,3 +43,17 @@ best_params_ada = {'learning_rate': 0.1, 'n_estimators': 200}
 best_gradient_boost_model = {'learning_rate': 0.01, 'max_depth': 3, 'n_estimators': 50}
 best_params_XG = {'colsample_bytree': 0.8, 'learning_rate': 0.01, 'max_depth': 4, 'min_child_weight': 1, 'n_estimators': 100, 'subsample': 0.5}
 best_params_RF = {'max_depth': 10, 'min_samples_leaf': 4, 'min_samples_split': 10, 'n_estimators': 200}
+
+#Create Function
+def calculate_metrics(model, X_train, X_test, y_train, y_test):
+    train_pred = model.predict(X_train)
+    test_pred = model.predict(X_test)
+
+    accuracy_train = accuracy_score(y_train, train_pred)
+    accuracy_test = accuracy_score(y_test, test_pred)
+    precision = precision_score(y_test, test_pred, average='weighted')
+    recall = recall_score(y_test, test_pred, average='weighted')
+    f1 = f1_score(y_test, test_pred, average='weighted')
+    accuracy = accuracy_score(y_test,y_pred) * 100
+
+    return accuracy_train, accuracy_test, precision, recall, f1,accuracy
