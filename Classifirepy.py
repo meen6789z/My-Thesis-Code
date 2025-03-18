@@ -112,3 +112,5 @@ for model_name in ['AdaBoost', 'GradientBoosting', 'XGBoost', 'RandomForest']:
                             }
                             results.append(result)
 
+# Convert to DataFrame
+results_df = pd.DataFrame(results)
