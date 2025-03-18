@@ -57,3 +57,14 @@ def calculate_metrics(model, X_train, X_test, y_train, y_test):
     accuracy = accuracy_score(y_test,y_pred) * 100
 
     return accuracy_train, accuracy_test, precision, recall, f1,accuracy
+
+# Parameters to adjust to reduce overfitting
+param_adjustments = {
+    'AdaBoost': {'learning_rate': [0.05, 0.1, 0.15], 'n_estimators': [100, 150, 200]},
+    'GradientBoosting': {'learning_rate': [0.01, 0.05, 0.1], 'max_depth': [3, 4, 5], 'n_estimators': [50, 100, 150]},
+    'XGBoost': {'learning_rate': [0.01, 0.05, 0.1], 'max_depth': [3, 4, 5], 'n_estimators': [50, 100, 150], 'subsample': [0.5, 0.7]},
+    'RandomForest': {'max_depth': [5, 7, 10], 'min_samples_leaf': [2, 4, 6], 'min_samples_split': [10, 15], 'n_estimators': [100, 150, 200]}
+}
+
+# Variables to store all results
+results = []
