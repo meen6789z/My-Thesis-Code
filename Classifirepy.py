@@ -67,6 +67,12 @@ print(f"Precision score = {precision:.2f}%")
 print(f"Recall score = {recall:.2f}")
 print(f"F1 score = {f1:.2f}%")
 
+print(classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
+
+
 # GridSearch
 XG_model = XGBClassifier(**best_params_XG,random_state=42)
 XG_model.fit(X_train, y_train)
@@ -91,3 +97,8 @@ print(f"Accuracy score = {accuracy:.2f}%")
 print(f"Precision score = {precision:.2f}%")
 print(f"Recall score = {recall:.2f}%")
 print(f"F1 score = {f1:.2f}%")
+
+print(classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap='Blues')
