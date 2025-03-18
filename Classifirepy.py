@@ -44,20 +44,6 @@ best_gradient_boost_model = {'learning_rate': 0.01, 'max_depth': 3, 'n_estimator
 best_params_XG = {'colsample_bytree': 0.8, 'learning_rate': 0.01, 'max_depth': 4, 'min_child_weight': 1, 'n_estimators': 100, 'subsample': 0.5}
 best_params_RF = {'max_depth': 10, 'min_samples_leaf': 4, 'min_samples_split': 10, 'n_estimators': 200}
 
-#Create Function
-def calculate_metrics(model, X_train, X_test, y_train, y_test):
-    train_pred = model.predict(X_train)
-    test_pred = model.predict(X_test)
-
-    accuracy_train = accuracy_score(y_train, train_pred)
-    accuracy_test = accuracy_score(y_test, test_pred)
-    precision = precision_score(y_test, test_pred, average='weighted')
-    recall = recall_score(y_test, test_pred, average='weighted')
-    f1 = f1_score(y_test, test_pred, average='weighted')
-    accuracy = accuracy_score(y_test,y_pred) * 100
-
-    return accuracy_train, accuracy_test, precision, recall, f1,accuracy
-
 # Parameters to adjust to reduce overfitting
 param_adjustments = {
     'AdaBoost': {'learning_rate': [0.05, 0.1, 0.15], 'n_estimators': [100, 150, 200]},
@@ -68,3 +54,61 @@ param_adjustments = {
 
 # Variables to store all results
 results = []
+
+
+# 10 rounds of testing
+for model_name in ['AdaBoost', 'GradientBoosting', 'XGBoost', 'RandomForest']:
+    if model_name == 'AdaBoost':
+        model = AdaBoostClassifier(**best_params_ada)
+        param_grid = param_adjustments['AdaBoost']
+    elif model_name == 'GradientBoosting':
+        model = GradientBoostingClassifier(**best_gradient_boost_model)
+        param_grid = param_adjustments['GradientBoosting']
+    elif model_name == 'XGBoost':
+        model = XGBClassifier(**best_params_XG)
+        param_grid = param_adjustments['XGBoost']
+    elif model_name == 'RandomForest':
+        model = RandomForestClassifier(**best_params_RF)
+        param_grid = param_adjustments['RandomForest']
+
+    # Experiment with customized parameter values ​​in a loop.
+    for learning_rate in param_grid.get('learning_rate', [None]):
+        for n_estimators in param_grid['n_estimators']:
+            for max_depth in param_grid.get('max_depth', [None]):
+                for min_samples_leaf in param_grid.get('min_samples_leaf', [1]):
+                    for min_samples_split in param_grid.get('min_samples_split', [2]):
+                        for subsample in param_grid.get('subsample', [1.0]):
+                            # Adjust parameters in each round
+                            if model_name == 'AdaBoost':
+                                model.set_params(learning_rate=learning_rate, n_estimators=n_estimators)
+                            elif model_name == 'GradientBoosting':
+                                model.set_params(learning_rate=learning_rate, n_estimators=n_estimators, max_depth=max_depth)
+                            elif model_name == 'XGBoost':
+                                model.set_params(learning_rate=learning_rate, n_estimators=n_estimators, max_depth=max_depth, subsample=subsample)
+                            elif model_name == 'RandomForest':
+                                model.set_params(max_depth=max_depth, min_samples_leaf=min_samples_leaf, min_samples_split=min_samples_split, n_estimators=n_estimators)
+
+                            # Train Model
+                            model.fit(X_train, y_train)
+
+                            # Calculate metrics
+                            accuracy_train, accuracy_test, precision, recall, f1,accuracy = calculate_metrics(model, X_train, X_test, y_train, y_test)
+
+                            # Record results
+                            result = {
+                                'Model': model_name,
+                                'Learning Rate': learning_rate,
+                                'N Estimators': n_estimators,
+                                'Max Depth': max_depth,
+                                'Min Samples Leaf': min_samples_leaf,
+                                'Min Samples Split': min_samples_split,
+                                'Subsample': subsample,
+                                'Train Accuracy': accuracy_train,
+                                'Test Accuracy': accuracy_test,
+                                'accuracy':accuracy,
+                                'Precision': precision,
+                                'Recall': recall,
+                                'F1 Score': f1
+                            }
+                            results.append(result)
+
